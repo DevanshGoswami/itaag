@@ -36,7 +36,14 @@ export default function serviceAutomation() {
 
   const submitForm = (data) => {
     const configForJSON = {...data, operation}
-    console.log(configForJSON)
+    let file = new File([JSON.stringify(configForJSON)], "config.json", {
+      type: "application/json",
+    });
+    let url = URL.createObjectURL(file);
+    let a = document.createElement("a");
+    a.setAttribute("download", "config.json");
+    a.setAttribute("href", url);
+    a.click();
   }
 
 

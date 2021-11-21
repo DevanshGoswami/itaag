@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   chakra,
   Box,
@@ -14,45 +14,63 @@ import {
   FormHelperText,
   Textarea,
   Button,
-  Select
+  Select,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import HeaderForm from "../components/API/HeaderForm";
 import { useForm } from "react-hook-form";
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-const schema = yup.object().shape(
-  {
-    url: yup.string().url().required(),
-    body: yup.string().required(),
-    method: yup.string().required(),
-  }
-)
+const schema = yup.object().shape({
+  url: yup.string().url().required(),
+  body: yup
+    .string()
+    .test("tests-json", "Please ensure the body is in JSON format", (value) => {
+      try {
+        let o = JSON.parse(value);
+        return o && typeof o === "object";
+      } catch (err) {
+        return false;
+      }
+    })
+    .required(),
+  method: yup.string().required(),
+});
 
 export default function apiAutomation() {
-
   const [headers, setHeaders] = useState([
     {
-      name: 'content-type',
-      value: 'application-json'
-    }
+      name: "content-type",
+      value: "application-json",
+    },
   ]);
 
-  const { register, handleSubmit, formState: {errors} }  = useForm({
-    resolver: yupResolver(schema)
-  })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const submitForm = (data) => {
-    const configForJSON = {...data, headers}
-    console.log(configForJSON)
-  }
+    const configForJSON = { ...data, headers };
+    let file = new File([JSON.stringify(configForJSON)], "config.json", {
+      type: "application/json",
+    });
+    let url = URL.createObjectURL(file);
+    let a = document.createElement("a");
+    a.setAttribute("download", "config.json");
+    a.setAttribute("href", url);
+    a.click();
+  };
 
   return (
     <Box bg={useColorModeValue("gray.50", "inherit")} p={10}>
-        <Head>
-            <title>API Automation</title>
-        </Head>
+      <Head>
+        <title>API Automation</title>
+      </Head>
       <Box>
         <SimpleGrid
           display={{ base: "initial", md: "grid" }}
@@ -96,15 +114,17 @@ export default function apiAutomation() {
                     >
                       URL
                     </FormLabel>
-                      <Input
-                        type="text"
-                        {...register('url')}
-                        name="url"
-                        placeholder="www.example.com/api"
-                        focusBorderColor="brand.400"
-                        rounded="md"
-                      />
-                      <Text fontSize="12px" color="red.400">{errors.url?.message}</Text>
+                    <Input
+                      type="text"
+                      {...register("url")}
+                      name="url"
+                      placeholder="www.example.com/api"
+                      focusBorderColor="brand.400"
+                      rounded="md"
+                    />
+                    <Text fontSize="12px" color="red.400">
+                      {errors.url?.message}
+                    </Text>
                   </FormControl>
                 </SimpleGrid>
 
@@ -115,26 +135,28 @@ export default function apiAutomation() {
                       fontWeight="md"
                       color={useColorModeValue("gray.700", "gray.50")}
                     >
-                      Request Body 
+                      Request Body
                     </FormLabel>
                     <Textarea
                       placeholder="{ name: '', email: '', account_no: '' }"
                       mt={1}
                       rows={3}
-                      {...register('body')}
+                      {...register("body")}
                       name="body"
                       shadow="sm"
                       focusBorderColor="brand.400"
                       fontSize={{ sm: "sm" }}
                     />
-                    <Text fontSize="12px" color="red.400">{errors.body?.message}</Text>
+                    <Text fontSize="12px" color="red.400">
+                      {errors.body?.message}
+                    </Text>
                     <FormHelperText>
                       The request must be in JSON format.
                     </FormHelperText>
                   </FormControl>
                 </div>
                 <div>
-                <FormControl as={GridItem} colSpan={[6, 3]}>
+                  <FormControl as={GridItem} colSpan={[6, 3]}>
                     <FormLabel
                       htmlFor="method"
                       fontSize="sm"
@@ -147,7 +169,7 @@ export default function apiAutomation() {
                       id="method"
                       name="method"
                       autoComplete="country"
-                      {...register('method')}
+                      {...register("method")}
                       mt={1}
                       focusBorderColor="brand.400"
                       shadow="sm"
@@ -160,11 +182,13 @@ export default function apiAutomation() {
                       <option value="PUT">PUT</option>
                       <option value="DELETE">DELETE</option>
                     </Select>
-                    <Text fontSize="12px" color="red.400">{errors.method?.message}</Text>
+                    <Text fontSize="12px" color="red.400">
+                      {errors.method?.message}
+                    </Text>
                   </FormControl>
                 </div>
                 <div>
-                    <HeaderForm headers={headers} setHeaders={setHeaders} />
+                  <HeaderForm headers={headers} setHeaders={setHeaders} />
                 </div>
               </Stack>
               <Box
@@ -173,20 +197,21 @@ export default function apiAutomation() {
                 bg={useColorModeValue("gray.50", "gray.900")}
                 textAlign="right"
               >
-            <Button
-                bg={'blue.400'}
-                color={'white'}
-                type="submit"
-                _hover={{
-                  bg: 'blue.500',
-                }}>
-                Submit
-            </Button>
+                <Button
+                  bg={"blue.400"}
+                  color={"white"}
+                  type="submit"
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                >
+                  Submit
+                </Button>
               </Box>
             </chakra.form>
           </GridItem>
         </SimpleGrid>
       </Box>
-      </Box>
+    </Box>
   );
 }
