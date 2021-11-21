@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import {
   chakra,
   Box,
@@ -19,6 +19,7 @@ import Head from "next/head";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { ConfigContext } from "../context/savedConfig.context";
 
 const schema = yup.object().shape(
   {
@@ -28,6 +29,8 @@ const schema = yup.object().shape(
 
 export default function serviceAutomation() {
 
+  const { saved, setSaved } = useContext(ConfigContext)
+
   const [operation, setOperation] = useState("Start");
 
   const { register, handleSubmit, formState: {errors} }  = useForm({
@@ -36,6 +39,7 @@ export default function serviceAutomation() {
 
   const submitForm = (data) => {
     const configForJSON = {...data, operation}
+<<<<<<< Updated upstream
     let file = new File([JSON.stringify(configForJSON)], "config.json", {
       type: "application/json",
     });
@@ -44,6 +48,15 @@ export default function serviceAutomation() {
     a.setAttribute("download", "config.json");
     a.setAttribute("href", url);
     a.click();
+=======
+    let now = new Date();
+    setSaved([...saved, { 
+        type: 'service', 
+        config: configForJSON, 
+        created: now.toUTCString()
+      }])
+    console.log(configForJSON)
+>>>>>>> Stashed changes
   }
 
 

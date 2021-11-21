@@ -18,12 +18,13 @@ import {
   FiMenu,
 } from 'react-icons/fi';
 
-import { FaRocket } from 'react-icons/fa'
+import { FaRocket, FaSave } from 'react-icons/fa'
 
 const LinkItems = [
   { name: 'Home', icon: FiHome, to: '/' },
   { name: 'Service', icon: FiSettings, to: '/serviceAutomation' },
-  { name: 'API', icon: FaRocket, to: '/apiAutomation'}
+  { name: 'API', icon: FaRocket, to: '/apiAutomation'},
+  { name: 'Saved Configs', icon: FaSave, to: '/savedConfig'}
 ];
 
 export default function Layout({ children }) {
