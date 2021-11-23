@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-import React, { useState } from "react";
-=======
 import React, {useState, useContext} from "react";
->>>>>>> Stashed changes
 import {
   chakra,
   Box,
@@ -23,14 +19,9 @@ import {
 import Head from "next/head";
 import HeaderForm from "../components/API/HeaderForm";
 import { useForm } from "react-hook-form";
-<<<<<<< Updated upstream
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-=======
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ConfigContext } from "../context/savedConfig.context";
->>>>>>> Stashed changes
 
 const schema = yup.object().shape({
   url: yup.string().url().required(),
@@ -49,12 +40,9 @@ const schema = yup.object().shape({
 });
 
 export default function apiAutomation() {
-<<<<<<< Updated upstream
-=======
 
   const { saved,setSaved } = useContext(ConfigContext)
 
->>>>>>> Stashed changes
   const [headers, setHeaders] = useState([
     {
       name: "content-type",
@@ -71,7 +59,6 @@ export default function apiAutomation() {
   });
 
   const submitForm = (data) => {
-<<<<<<< Updated upstream
     const configForJSON = { ...data, headers };
     let file = new File([JSON.stringify(configForJSON)], "config.json", {
       type: "application/json",
@@ -81,9 +68,6 @@ export default function apiAutomation() {
     a.setAttribute("download", "config.json");
     a.setAttribute("href", url);
     a.click();
-  };
-=======
-    const configForJSON = {...data, headers}
     let now = new Date()
     setSaved([...saved, { 
       type: 'api', 
@@ -92,7 +76,6 @@ export default function apiAutomation() {
     }])
     console.log(configForJSON)
   }
->>>>>>> Stashed changes
 
   return (
     <Box bg={useColorModeValue("gray.50", "inherit")} p={10}>

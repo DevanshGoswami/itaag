@@ -39,7 +39,6 @@ export default function serviceAutomation() {
 
   const submitForm = (data) => {
     const configForJSON = {...data, operation}
-<<<<<<< Updated upstream
     let file = new File([JSON.stringify(configForJSON)], "config.json", {
       type: "application/json",
     });
@@ -48,7 +47,6 @@ export default function serviceAutomation() {
     a.setAttribute("download", "config.json");
     a.setAttribute("href", url);
     a.click();
-=======
     let now = new Date();
     setSaved([...saved, { 
         type: 'service', 
@@ -56,7 +54,6 @@ export default function serviceAutomation() {
         created: now.toUTCString()
       }])
     console.log(configForJSON)
->>>>>>> Stashed changes
   }
 
 
