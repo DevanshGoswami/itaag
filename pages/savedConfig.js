@@ -1,4 +1,5 @@
 import React, {useContext} from "react";
+import { useRouter } from "next/dist/client/router";
 import {
   Box,
   useColorModeValue,
@@ -18,7 +19,9 @@ import { ConfigContext } from "../context/savedConfig.context";
 
 export default function savedConfig() {
 
-  const { saved, setSaved } = useContext(ConfigContext)
+  const router = useRouter()
+
+  const { saved, setSaved, setSelected } = useContext(ConfigContext)
 
   const downLoadItem = (item) => {
     let file = new File([JSON.stringify(item.config)], "config.json", {
@@ -31,11 +34,28 @@ export default function savedConfig() {
     a.click();
   }
 
+  const redirectToService = (save) => {
+    setSelected(save)
+    if(save.type === 'api'){
+        router.push({
+          pathname: '/apiAutomation',
+          query: { returnUrl: router.asPath }
+        })
+    }
+    else{
+      router.push({
+        pathname: '/serviceAutomation',
+        query: { returnUrl: router.asPath }
+      })
+    }
+  }
+
   const renderRow = (save, index) => {
     return save && <Tr index = {index}> 
-      <Td>{save.type === 'api' ? save.config.url : save.config.service_name }</Td>
+      <Td>{save.type === 'api' ? save.config.url : save.config.service_name}</Td>
       <Td>{save.type}</Td>
       <Td>{save.created}</Td>
+      <Td _hover={{cursor: 'pointer'}} color="yellow.400" onClick={() => redirectToService(save)}>Edit</Td>
       <Td _hover={{cursor: 'pointer'}} color="red.300" onClick={() => setSaved(saved.filter( item => item !== save ))}>Delete</Td>
       <Td _hover={{cursor: 'pointer'}} color="blue.100" onClick={() => downLoadItem(save)}>Download</Td>
     </Tr>
@@ -73,6 +93,7 @@ export default function savedConfig() {
                     <Th>Name</Th>
                     <Th>Type</Th>
                     <Th>Created At</Th>
+                    <Th></Th>
                     <Th></Th>
                     <Th></Th>
                   </Tr>

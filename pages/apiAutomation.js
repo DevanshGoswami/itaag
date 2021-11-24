@@ -41,7 +41,7 @@ const schema = yup.object().shape({
 
 export default function apiAutomation() {
 
-  const { saved,setSaved } = useContext(ConfigContext)
+  const { saved, setSaved, selected, setSelected } = useContext(ConfigContext)
 
   const [headers, setHeaders] = useState([
     {
@@ -50,16 +50,23 @@ export default function apiAutomation() {
     },
   ]);
 
+  let formConfig = {
+    resolver: yupResolver(schema),
+  }
+
+  if(selected && selected.type === 'api'){
+    formConfig = {...formConfig, defaultValues: selected.config}
+  }
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm(formConfig);
 
   const submitForm = (data) => {
     const configForJSON = { ...data, headers };
+    setSelected(null)
     let file = new File([JSON.stringify(configForJSON)], "config.json", {
       type: "application/json",
     });
@@ -74,7 +81,6 @@ export default function apiAutomation() {
       config: configForJSON,
       created: now.toUTCString()
     }])
-    console.log(configForJSON)
   }
 
   return (

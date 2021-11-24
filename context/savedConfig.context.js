@@ -5,6 +5,7 @@ export const ConfigContext = createContext();
 export const ConfigContextProvider = ({children}) => {
 
     const [saved, setSaved] = useState([])
+    const [selected, setSelected] = useState(null)
 
       useEffect(()=>{
         const savedConfig = localStorage.getItem("savedConfig");
@@ -18,7 +19,7 @@ export const ConfigContextProvider = ({children}) => {
       });
 
     return(
-        <ConfigContext.Provider value = {{saved, setSaved}}>
+        <ConfigContext.Provider value = {{saved, setSaved, selected, setSelected}}>
             { children }
         </ConfigContext.Provider>
     );

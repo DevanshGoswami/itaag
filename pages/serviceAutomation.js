@@ -29,16 +29,23 @@ const schema = yup.object().shape(
 
 export default function serviceAutomation() {
 
-  const { saved, setSaved } = useContext(ConfigContext)
+  const { saved, setSaved, selected, setSelected } = useContext(ConfigContext)
 
   const [operation, setOperation] = useState("Start");
 
-  const { register, handleSubmit, formState: {errors} }  = useForm({
-    resolver: yupResolver(schema)
-  })
+  let formConfig = {
+    resolver: yupResolver(schema),
+  }
+
+  if(selected && selected.type === 'service'){
+    formConfig = {...formConfig, defaultValues: selected.config}
+  }
+
+  const { register, handleSubmit, formState: {errors} }  = useForm(formConfig)
 
   const submitForm = (data) => {
     const configForJSON = {...data, operation}
+    setSelected(null)
     let file = new File([JSON.stringify(configForJSON)], "config.json", {
       type: "application/json",
     });
@@ -53,7 +60,6 @@ export default function serviceAutomation() {
         config: configForJSON, 
         created: now.toUTCString()
       }])
-    console.log(configForJSON)
   }
 
 
